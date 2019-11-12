@@ -110,7 +110,7 @@
 					//type: 'warning'
 				}).then(() => {
 					sessionStorage.removeItem('user');
-					_this.$router.push('/login');
+					_this.$router.push('/');
 				}).catch(() => {
 
 				});
@@ -126,7 +126,7 @@
 			}
 		},
 		mounted() {
-			var user = sessionStorage.getItem('user');
+			var user = sessionStorage.getItem('user');			
 			if (user) {
 				user = JSON.parse(user);
 				this.sysUserName = user.name || '';

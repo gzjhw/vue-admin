@@ -37,7 +37,7 @@ let routes = [
     },
     //{ path: '/main', component: Main },    
     {
-        path: '/home',
+        path: '/',
         component: Home,
         name: '导航一',
         iconCls: 'el-icon-message',//图标样式class
@@ -50,7 +50,7 @@ let routes = [
         meta: { requiresAuth: true }
     },
     {
-        path: '/home',
+        path: '/',
         component: Home,
         name: '导航二',
         iconCls: 'fa fa-id-card-o',
@@ -62,7 +62,7 @@ let routes = [
         meta: { requiresAuth: true }
     },
     {
-        path: '/home',
+        path: '/',
         component: Home,
         name: '',
         iconCls: 'fa fa-address-card',
@@ -74,7 +74,7 @@ let routes = [
         meta: { requiresAuth: true }
     },
     {
-        path: '/home',
+        path: '/',
         component: Home,
         name: 'Charts',
         iconCls: 'fa fa-bar-chart',
