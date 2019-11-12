@@ -39,7 +39,7 @@
 				}).then(() => {
 					sessionStorage.removeItem('user');
 					_this.$router.push('/');
-					_this.reload()
+					_this.reload(); //刷新问题  
 				}).catch(() => {
 
 				});
