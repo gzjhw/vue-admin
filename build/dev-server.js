@@ -21,6 +21,10 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+app.use(function(req,res,next){
+    res.header('Access-Control-Allow-Origin','*');//自己补充，允许跨域，自己测试添加这句话就可以正常返回数据了
+    next();
+})
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
