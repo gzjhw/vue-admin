@@ -1,13 +1,13 @@
 <template>
 	 <div>
 	 	<section>
-	 		<div v-if="user">
+	 		<div v-if="user" class="main_top">
 	 			<font color="#1D57BB" class="login-user">欢迎您，12262163 (12262163)</font>
 	 			<a @click="logout" target="_self">退出</a>
 	 		</div>
-	 		<div v-if="!user">
+	 		<div v-if="!user" class="main_top">
 	 			<span class="STYLE1">欢迎光临！</span>
-	 			<button v-on:click="login">登录</button>				
+	 			<a @click="login">登录</a>				
 	 		</div>			
 			
 		</section>
@@ -69,5 +69,13 @@
 </script>
 
 <style scoped>
+	/*.main_top a{
+		color:#1D57BB; text-decoration:none; cursor:pointer;
+		
+	}
 
+	.main_top a:hover {
+		text-decoration:underline; 
+	} */
+	
 </style>
