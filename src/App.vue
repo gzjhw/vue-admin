@@ -2,7 +2,7 @@
 	<div id="app">
 		<transition name="fade"
 		            mode="out-in">
-			<router-view></router-view>
+			<router-view v-if="isRouterAlive"></router-view>
 		</transition>
 	</div>
 </template>
@@ -11,6 +11,26 @@
 export default {
 	name: 'app',
 	components: {
+	},
+	provide(){
+	    return {
+	      reload:this.reload
+	    }
+  	},
+
+  	data () {
+	    return {
+	      isRouterAlive:true,
+	    }
+  	},
+  	methods:{
+	    reload(){
+	      this.isRouterAlive = false
+	      //在修改数据之后使用 $nextTick，则可以在回调中获取更新后的 DOM
+	      this.$nextTick(()=>{
+	        this.isRouterAlive = true
+	      })
+	    }
 	}
 }
 

@@ -1,10 +1,15 @@
 <template>
 	 <div>
 	 	<section>
-			<font color="#1D57BB" class="login-user">欢迎您，12262163 (12262163)</font>
-			<a id="logout" href="/cgi-bin/login/user_logout.cgi" target="_self">退出</a>
-			<span class="STYLE1">欢迎光临！</span>
-			<a id="login" href="javascript:void(0);">登录</a>
+	 		<div v-if="user">
+	 			<font color="#1D57BB" class="login-user">欢迎您，12262163 (12262163)</font>
+	 			<a @click="logout" target="_self">退出</a>
+	 		</div>
+	 		<div v-if="!user">
+	 			<span class="STYLE1">欢迎光临！</span>
+	 			<button v-on:click="login">登录</button>				
+	 		</div>			
+			
 		</section>
 	
 		 <footer>  		
@@ -17,6 +22,48 @@
 
 <script>
 	export default {
+		name:'main',
+		inject:['reload'],
+		data() {
+			return {
+				user:null,
+			}
+		},
+
+		methods: {			
+			//退出登录
+			logout: function () {
+				var _this = this;
+				this.$confirm('确认退出吗?', '提示', {
+					//type: 'warning'
+				}).then(() => {
+					sessionStorage.removeItem('user');
+					_this.$router.push('/');
+					_this.reload()
+				}).catch(() => {
+
+				});
+
+
+			},
+			//跳转到登录
+			login:function(){
+				var _this = this;
+				sessionStorage.removeItem('user');
+				_this.$router.push('/login');
+			},
+			
+		},
+
+		mounted() {
+			this.user = sessionStorage.getItem('user');			
+			if (this.user) {
+				this.user = JSON.parse(user);				
+			}
+
+		}
+
+
 	}
 
 </script>
