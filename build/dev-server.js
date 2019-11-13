@@ -21,10 +21,32 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
-app.use(function(req,res,next){
-    res.header('Access-Control-Allow-Origin','*');//自己补充，允许跨域，自己测试添加这句话就可以正常返回数据了
+// proxy middleware options
+var options = {
+  target: 'http://localhost', // target host
+  changeOrigin: true, // needed for virtual hosted sites
+  ws: true, // proxy websockets
+  pathRewrite: {
+    '^/api/old-path': '/api/new-path', // rewrite path
+    '^/api/remove/path': '/path' // remove base path
+  },
+  router: {
+    // when request.headers.host == 'dev.localhost:3000',
+    // override target 'http://www.example.org' to 'http://localhost:8000'
+    'http://localhost:8080': 'http://localhost:80'
+  }
+};
+
+// create the proxy (without context)
+var exampleProxy = proxyMiddleware(options);
+
+app.use('/api', exampleProxy);
+app.listen(80);
+
+/*
+app.use(function(req,res,next){    
     next();
-})
+})*/
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {

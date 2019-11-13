@@ -69,13 +69,13 @@
 </script>
 
 <style scoped>
-	/*.main_top a{
+	.main_top a{
 		color:#1D57BB; text-decoration:none; cursor:pointer;
 		
 	}
 
 	.main_top a:hover {
 		text-decoration:underline; 
-	} */
+	}
 	
 </style>

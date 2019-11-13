@@ -50,10 +50,12 @@
             //_this.$router.replace('/table');
             this.logining = true;
             //NProgress.start();
-            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
+            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass, aaa: 8888 };
             requestLogin(loginParams).then(data => {
               this.logining = false;
               //NProgress.done();
+              //console.log('data');
+              console.log(data);
               let { msg, code, user } = data;
               if (code !== 200) {
                 this.$message({
