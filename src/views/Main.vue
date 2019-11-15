@@ -21,8 +21,7 @@
 </template>
 
 <script>
-	export default {
-		name:'main',
+	export default {		
 		inject:['reload'],
 		data() {
 			return {

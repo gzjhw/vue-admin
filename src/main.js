@@ -14,6 +14,11 @@ import routes from './routes'
 //Mock.bootstrap();
 import 'font-awesome/css/font-awesome.min.css'
 
+import { _local  } from './storage/storage';
+
+
+
+
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
@@ -31,8 +36,8 @@ router.beforeEach((to, from, next) => {
   }
   console.log(to)
   if (to.meta.requiresAuth ) {
-    let user = JSON.parse(sessionStorage.getItem('user'));
-    if(!user){
+    let access_token = _local.get('access_token');
+    if(!access_token){
       next({ path: '/login' })     
     }else {
       next()  

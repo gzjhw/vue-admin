@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { _local   } from '../storage/storage';
+import _this from '../main.js';
 
 let base = '';
 
@@ -9,57 +11,92 @@ let base1 = '/api/v1';
 } ).catch(err=>{
 	console.log(err)
 })};*/
+const refreshToken = params => { return axios.post(`${base1}/current`, params).then(res=>{
+	let { access_token, token_type, expires_in } = data;
+    var expires = (expires_in-30) * 1000; //毫秒级  30秒前换token
+    _local.set('access_token',access_token, expires);
+    _local.set('old_token',access_token);	
+	return res.data
+})};
 
-/*axios.interceptors.request.use(function (config) {    // 这里的config包含每次请求的内容
-    let token = getToken()
-    if (token) {
-          config.headers.Authorization = 'JWT '+ `${token}`;
-    }else {
-        window.location.pathname = '/login'
-    }
-    return config;
+axios.interceptors.request.use(function (config) {    // 这里的config包含每次请求的内容
+	var url = config.url;
+	console.log(1);	
+	if(url !== '/api/v1/authorizations' && url !== '/api/v1/current'){//不是login，不是刷新
+		console.log(2);			
+		let token = _local.get('access_token')
+		let old_token = _local.get('access_token')
+		if (token) {
+		 	console.log(token);
+		    config.headers.Authorization = 'JWT '+ `${token}`;
+		}
+	}
+
+	if(url == '/api/v1/current'){//刷新token
+		let old_token = _local.get('old_token')
+		if (old_token) {		 	
+		    config.headers.Authorization = 'JWT '+ `${old_token}`;
+		}
+	}
+	
+	return config;   
+    
 }, function (err) {
     return Promise.reject(err);
-})*/
+})
 
 
 //拦截器
 axios.interceptors.response.use(
 	response => {  	
-		if(!error.response.data['code123456789789']){
-	    	error.response.data['code123456789789'] = 200;  //200正确，其余情况就对的
+		if(!response.data['code']){
+	    	response.data['code'] = 200;  //200正确，其余情况就对的
 	    }
 		   	
 	  	return new Promise((resolve, reject) => {
 	   		resolve(response);
 	   	}); 	
 	},
-	error => {  	
-	    if (error.response) {
-		      switch (error.response.status) {
-		        case 401:
-		          // 返回 401 清除token信息并跳转到登录页面
-		          console.log('过期') 
-		        /*  router.replace({
-		            path: '/login'
-		          })
-		          location.reload()   */                   
-		      }
-		      
-			  if(!error.response.data['code123456789789']){	    	
-			  	error.response.data['code123456789789'] = 500;  //500出错，其余情况就对的
-			  }
+	error => {
+	    if (error.response) {	    		
+		    switch (error.response.status) {
+			   	case 401:
+			    // 返回401清除token信息并跳转到登录页面
+				
+				var originalRequest = error.config;
+				var url = originalRequest.url;
+				console.log(originalRequest);
+				console.log(url);				
+				if(url !== '/api/v1/authorizations' && url !== '/api/v1/current'){ //不是登录，不是刷新
+					console.log(3);
+					var params = {}
+					refreshToken(params).then(data=>{ //刷新token，成功重新发请求						
+						if(data.code == 200){
+							return axios.request(originalRequest);	
+						}
+						
+					}).catch(err=>{
+						_this.$router.push({ path: '/login' });  //跳转到
+					});					
+					
+				}
 
-			  return new Promise((resolve, reject) => {
-			  	resolve(error.response);
+
+
+		    }
+		      
+			if(!error.response.data['code']){	    	
+			  	error.response.data['code'] = 500;  //500出错，其余情况就对的
+			}
+
+			return new Promise((resolve, reject) => {
+				resolve(error.response);
 			      
-			  });
+			});
 		}
 		return new Promise((resolve, reject) => {
-			  	reject(error.response);
-			      
+			reject(error.response);			      
 		});
-
 
 	}
 );
@@ -78,8 +115,14 @@ export const editUser = params => { return axios.get(`${base}/user/edit`, { para
 
 export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
 
+export const requestUser = params => { return axios.get(`${base1}/user`, params).then(res=>res.data)};
+
+
 
 export const requestLogin = params => { return axios.post(`${base1}/authorizations`, params).then(res => {
-	console.log(res)
-	//return res.data 
+	let { access_token, token_type, expires_in } = data;
+    var expires = (expires_in-30) * 1000; //毫秒级  30秒前换token
+    _local.set('access_token',access_token, expires);
+    _local.set('old_token',access_token);	
+	return res.data 
 }); };

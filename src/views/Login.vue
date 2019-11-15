@@ -16,14 +16,15 @@
 </template>
 
 <script>
-  import { requestLogin } from '../api/api';
+  import { requestLogin,requestUser } from '../api/api';
+  import { _local   } from '../storage/storage';
   //import NProgress from 'nprogress'
   export default {
     data() {
       return {
         logining: false,
         ruleForm2: {
-          account: 'admin',
+          account: '15920126201',
           checkPass: '123456'
         },
         rules2: {
@@ -50,25 +51,40 @@
             //_this.$router.replace('/table');
             this.logining = true;
             //NProgress.start();
-            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass, aaa: 8888 };
+            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass};
+            
             requestLogin(loginParams).then(data => {
               this.logining = false;
               //NProgress.done();
-              //console.log('data');
+              console.log('data');
               console.log(data);
-              let { msg, code, user } = data;
+              var code = data.code;
+              
               if (code !== 200) {
                 this.$message({
-                  message: msg,
+                  message: data.message,
                   type: 'error'
                 });
               } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/table' });
+                var userParams = null;  
+                requestUser.then(data=>{
+                    var code = data.code;
+                    if (code !== 200) {
+                      this.$message({
+                        message: data.message,
+                        type: 'error'
+                      });
+                    } else {
+                       sessionStorage.setItem('user', JSON.stringify(user));
+                    }
+                    
+                });                
+
+                //this.$router.push({ path: '/' });
               }
             });
           } else {
-            console.log('error submit!!');
+            console.log('error submit login!!');
             return false;
           }
         });
