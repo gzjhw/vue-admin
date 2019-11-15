@@ -52,7 +52,7 @@ router.beforeEach((to, from, next) => {
 //NProgress.done();
 //});
 
-new Vue({
+const vue = new Vue({
   //el: '#app',
   //template: '<App/>',
   router,
@@ -60,4 +60,6 @@ new Vue({
   //components: { App }
   render: h => h(App)
 }).$mount('#app')
+
+export  { vue }
 

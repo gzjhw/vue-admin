@@ -67,20 +67,24 @@
                 });
               } else {
                 var userParams = null;  
-                requestUser.then(data=>{
+                requestUser(userParams).then(data=>{
                     var code = data.code;
                     if (code !== 200) {
                       this.$message({
                         message: data.message,
                         type: 'error'
                       });
-                    } else {
-                       sessionStorage.setItem('user', JSON.stringify(user));
+                    } else {                      
+                      sessionStorage.setItem('user', JSON.stringify(data));
                     }
                     
-                });                
+                });
 
-                //this.$router.push({ path: '/' });
+                var user = sessionStorage.getItem('user');
+                console.log(user);
+                console.log(111111);
+
+                this.$router.push({ path: '/' });
               }
             });
           } else {

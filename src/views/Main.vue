@@ -57,7 +57,8 @@
 		mounted() {
 			this.user = sessionStorage.getItem('user');			
 			if (this.user) {
-				this.user = JSON.parse(user);				
+				this.user = JSON.parse(this.user);	
+				console.log(this.user);			
 			}
 
 		}
