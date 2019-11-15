@@ -40,6 +40,8 @@ axios.interceptors.request.use(function (config) {    // 这里的config包含�
 
 	
 	console.log(config);
+
+	//vue.$router.push({ path: '/abc' });  //跳转到
 	
 	return config;   
     
@@ -123,6 +125,6 @@ export const requestLogin = params => { return axios.post(`${base1}/authorizatio
 	let { access_token, token_type, expires_in } = res.data;
     var expires = expires_in * 1000; 
     _local.set('access_token',access_token, expires);
-    _local.set('old_token',access_token);	
+    _local.set('old_token',access_token);    
 	return res.data 
 }); };
