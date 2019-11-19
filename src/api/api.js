@@ -128,3 +128,13 @@ export const requestLogin = params => { return axios.post(`${base1}/authorizatio
     _local.set('old_token',access_token);    
 	return res.data 
 }); };
+
+//取图片验证码
+export const requestVerifycode = params => { return axios.post(`${base1}/captchas`, params).then(res => {	
+	return res.data 
+}); };
+
+//注册功能
+export const requestRegister = params => { return axios.post(`${base1}/users`, params).then(res => {	
+	return res.data 
+}); };

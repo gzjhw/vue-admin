@@ -3,12 +3,12 @@
 	 	<section>
 	 		<div v-if="user" class="main_top">
 	 			<font color="#1D57BB" class="login-user">欢迎您，12262163 (12262163)</font>
-	 			<a @click="logout" target="_self">退出</a>
-	 			<a @click="register" target="_self">注册</a>
+	 			<a @click="logout" target="_self">退出</a>	 			
 	 		</div>
 	 		<div v-if="!user" class="main_top">
 	 			<span class="STYLE1">欢迎光临！</span>
-	 			<a @click="login">登录</a>				
+	 			<a @click="login">登录</a>
+	 			<a @click="regist" target="_self">注册</a>				
 	 		</div>			
 			
 		</section>
@@ -54,10 +54,8 @@
 			},
 
 			//注册功能
-			register:function(){
-				var _this = this;
-				sessionStorage.removeItem('user');
-				_this.$router.push('/register');
+			regist:function(){				
+				this.$router.push('/registe');
 			},
 			
 		},
