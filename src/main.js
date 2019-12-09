@@ -49,6 +49,7 @@ function subscribeTokenRefresh (cb) {
 
 /*刷新请求（refreshSubscribers数组中的请求得到新的token之后会自执行，用新的token去请求数据）*/
 function onRrefreshed (token) {
+  console.log('onRrefreshed');
   refreshSubscribers.map(cb => cb(token))
 }
 
@@ -99,10 +100,11 @@ axios.interceptors.request.use(function (config) {    // 这里的config包含�
       /*把请求(token)=>{....}都push到一个数组中*/
           let retry = new Promise((resolve, reject) => {
            /*(token) => {...}这个函数就是回调函数*/
+            console.log('挂起');
             subscribeTokenRefresh((token) => {
                 config.headers.Authorization = 'Bearer ' + token
                 /*将请求挂起*/
-                console.log('挂起');
+                console.log('执行挂起');
                 console.log(config);
                 resolve(config)
             })
