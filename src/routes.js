@@ -10,6 +10,7 @@ import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
+import MwsConfig from './views/nav1/MwsConfig.vue'
 
 let routes = [
     {
@@ -48,9 +49,10 @@ let routes = [
     {
         path: '/home',
         component: Home,
-        name: '导航一',
+        name: '会员管理',
         iconCls: 'el-icon-message',//图标样式class
         children: [           
+            { path: '/mwsconfig', component: MwsConfig, name: '会员亚马逊参数维护', meta: { requiresAuth: true } },
             { path: '/table', component: Table, name: 'Table', meta: { requiresAuth: true } },
             { path: '/form', component: Form, name: 'Form', meta: { requiresAuth: true } },
             { path: '/user', component: user, name: '列表', meta: { requiresAuth: true } },

@@ -11,6 +11,11 @@ var _local = {
         if (expires) {
             // 记录何时将值存入缓存，毫秒级
             var data = Object.assign(params, { startTime: new Date().getTime() });
+            console.log('local key');
+            console.log(key);
+            console.log(value);
+            console.log(expires);
+            console.log(data);
             localStorage.setItem(key, JSON.stringify(data));
         } else {
             if (Object.prototype.toString.call(value) == '[object Object]') {
@@ -28,13 +33,20 @@ var _local = {
         // 先将拿到的试着进行json转为对象的形式
         try {
             item = JSON.parse(item);
+            console.log('local item');
+            console.log(item);           
         } catch (error) {
             // eslint-disable-next-line no-self-assign
             item = item;
+            console.log('local item');
+            console.log(item);
         }
         // 如果有startTime的值，说明设置了失效时间
         if (item && item.startTime) {
             let date = new Date().getTime();
+            console.log('get local date:');
+            console.log(date);
+            console.log(item);
             // 如果大于就是过期了，如果小于或等于就还没过期
             if (date - item.startTime > item.expires) {
                 localStorage.removeItem(name);

@@ -2,7 +2,7 @@
 	 <div>
 	 	<section>
 	 		<div v-if="user" class="main_top">
-	 			<font color="#1D57BB" class="login-user">欢迎您，12262163 (12262163)</font>
+	 			<font color="#1D57BB" class="login-user">欢迎您，{{user.name}}</font>
 	 			<a @click="logout" target="_self">退出</a>	 			
 	 		</div>
 	 		<div v-if="!user" class="main_top">
@@ -51,6 +51,8 @@
 				var _this = this;
 				sessionStorage.removeItem('user');
 				_this.$router.push('/login');
+
+
 			},
 
 			//注册功能
