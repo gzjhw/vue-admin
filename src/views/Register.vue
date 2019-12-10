@@ -37,22 +37,20 @@ export default {
           console.log(reg.test(value));
           if (reg.test(value)) {
             if(!this.isCode){
-                requestVerifycode({'phone':value}).then(data =>{
-              console.log(50);
-              console.log(data)  
-              var code = data.code;                           
-              if (code !== 200) {
-                this.$message({
-                  message: data.message,
-                  type: 'error'
-                });
-              } else {
-                  this.isCode = true;
-                  this.verifykey = data.captcha_key                  
-                  this.imgUrl = data.captcha_image_content;
-                  console.log(data);
-                  callback();  
-              }
+                requestVerifycode({'phone':value}).then(res =>{
+                var data = res.data; 
+                if (res.status >= 400) {
+                  this.$message({
+                    message: data.message,
+                    type: 'error'
+                  });
+                } else {
+                    this.isCode = true;
+                    this.verifykey = data.captcha_key                  
+                    this.imgUrl = data.captcha_image_content;
+                    console.log(data);
+                    callback();  
+                }
               });
             }else{
               callback();
@@ -144,18 +142,15 @@ export default {
                       'verification_key': this.verifykey,
                       'verification_code': this.registeForm.verification_code,
                     }
-                  requestRegister(parms).then(data =>{                       
-                      console.log(110);
-                      console.log(data)  
-                      var code = data.code;                           
+                  requestRegister(parms).then(res =>{                                             
+                      var data = res.data;                           
                       if (code !== 200) {
                         this.$message({
                           message: data.message,
                           type: 'error'
                         });
                       } else {
-                         this.$router.push({ path: '/' });                 
-                          
+                         this.$router.push({ path: '/' });                                           
                       }
                     });             
               }else {
@@ -167,11 +162,9 @@ export default {
 
         // 切换验证码
         refreshCode() {
-            requestVerifycode({'phone':this.registeForm.phone}).then(data =>{ 
-              var code = data.code;
-              console.log(1111);
-              console.log(data)                           
-              if (code !== 200) {
+            requestVerifycode({'phone':this.registeForm.phone}).then(res =>{ 
+              var data = res.data;              
+              if (res.status > 400) {
                 this.$message({
                   message: data.message,
                   type: 'error'

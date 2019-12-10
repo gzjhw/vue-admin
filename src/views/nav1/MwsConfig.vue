@@ -82,22 +82,25 @@
 		<!--新增界面-->
 		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">				
-				<el-form-item label="亚马逊卖家id">
+				<el-form-item label="会员手机号" prop="phone">
+					<el-input v-model="addForm.phone" ></el-input>
+				</el-form-item>
+				<el-form-item label="亚马逊卖家id" prop="seller_id">
 					<el-input v-model="addForm.seller_id" ></el-input>
 				</el-form-item>
-				<el-form-item label="亚马逊授权令牌">
+				<el-form-item label="亚马逊授权令牌" prop="auth_token">
 					<el-input v-model="addForm.auth_token" ></el-input>
 				</el-form-item>
-				<el-form-item label="市场">
-					<el-input type="textarea" v-model="addForm.marketplace"></el-input>
+				<el-form-item label="市场" prop="marketplace">
+					<el-input v-model="addForm.marketplace" prop="marketplace"></el-input>
 				</el-form-item>				
-				<el-form-item label="可用别">
-					<el-radio-group v-model="addForm.isUse">
-						<el-radio class="radio" :label="1">开启</el-radio>
-						<el-radio class="radio" :label="0">关闭</el-radio>
+				<el-form-item label="可用别" > 
+					<el-radio-group v-model="addForm.isUse" prop="isUse">
+						<el-radio class="radio" label="1" >开启</el-radio>
+						<el-radio class="radio" label="0">关闭</el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="数据库模式">
+				<el-form-item label="数据库模式" prop="schema">
 					<el-input v-model="addForm.schema"></el-input>
 				</el-form-item>
 			</el-form>
@@ -179,8 +182,8 @@
 					seller_id: '',
 					auth_token: '',
 					marketplace: '',
-					isUse: 0,
-					schema: ''
+					isUse: "1",
+					schema: '',
 				}
 
 			}
@@ -204,9 +207,9 @@
 				console.log(para);
 				this.listLoading = true;
 				//NProgress.start();
-				getMwsConfigListPage(para).then((data) => {
-					
-					if(data.code !== 200){
+				getMwsConfigListPage(para).then((res) => {
+					var data = res.data;
+					if(res.status >= 400){
 						this.$message({
 							message: data.message,
 							type: 'error'
@@ -253,11 +256,12 @@
 			handleAdd: function () {
 				this.addFormVisible = true;
 				this.addForm = {
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
+					phone: '15920126203',
+					seller_id: 'hnkljhlkh',
+					auth_token: '',
+					marketplace: '',
+					isUse: "1",
+					schema: 'public'
 				};
 			},
 			//编辑
@@ -291,11 +295,52 @@
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							this.addLoading = true;
 							//NProgress.start();
-							let para = Object.assign({}, this.addForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							addUser(para).then((res) => {
+							let para = Object.assign({}, this.addForm);	
+							console.log(111123);
+							console.log(para);						
+							addMwsConfig(para).then((res) => {
 								this.addLoading = false;
-								//NProgress.done();
+								var data = res.data;								
+								var message = '';								
+								if(res.status >= 400){
+									message = data.message;
+									if(data.errors){
+										for(let i in data.errors) {
+											switch(i){
+												case 'phone':
+													message = '会员手机' + ':' + data.errors[i];
+													break;
+												case 'seller_id':
+													message = '卖家id' + ':' + data.errors[i];
+													break;
+												case 'auth_token':
+													message = '亚马逊授权令牌' + ':' + data.errors[i];
+													break;
+												case 'marketplace':
+													message = '市场：' + ':' + data.errors[i];
+													break;
+												case 'isUse':
+													message = '可用别：' + ':' + data.errors[i];
+													break;
+												case 'schema':
+													message = '模式：' + ':'+ data.errors[i];
+													break;				
+												default:
+													break;
+											}
+											
+											break;
+										}
+									} 
+
+
+									return this.$message({
+										message: message,
+										type: 'error'
+									});
+								}
+								
+
 								this.$message({
 									message: '提交成功',
 									type: 'success'

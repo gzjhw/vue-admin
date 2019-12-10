@@ -19,6 +19,10 @@ import { _local  } from './storage/storage';
 import axios from 'axios';
 import { refreshToken } from  './api/api'
 
+let ttl = 59;
+
+let JWT_REFRESH_TTL = 20150;  //可以允许刷新时间
+
 
 
 
@@ -55,8 +59,7 @@ function onRrefreshed (token) {
 
 axios.interceptors.request.use(function (config) {    // 这里的config包含每次请求的内容 
   if(config.headers.meta && config.headers.meta.requiresAuth){
-    let is_refresh = _local.get('is_refresh');
-    console.log(is_refresh);
+    let is_refresh = _local.get('is_refresh');    
     if(!is_refresh){
       alert('刷新token过期，请重新登录')
       _local.remove('access_token');
@@ -83,7 +86,8 @@ axios.interceptors.request.use(function (config) {    // 这里的config包含�
             /*将刷新token的标志置为true*/
               window.isRefreshing = true
               /*发起刷新token的请求*/
-              refreshToken({_method: 'PUT'}).then(data => {
+              refreshToken({_method: 'PUT'}).then(res => {
+                var data = res.data;
                 /*将标志置为false*/
                 window.isRefreshing = false              
                 /*执行数组里的函数,重新发起被挂起的请求*/
@@ -104,8 +108,7 @@ axios.interceptors.request.use(function (config) {    // 这里的config包含�
             subscribeTokenRefresh((token) => {
                 config.headers.Authorization = 'Bearer ' + token
                 /*将请求挂起*/
-                console.log('执行挂起');
-                console.log(config);
+                console.log('执行挂起');                
                 resolve(config)
             })
         })
@@ -114,7 +117,8 @@ axios.interceptors.request.use(function (config) {    // 这里的config包含�
     
       }
 
-    console.log('通过');  
+    console.log('通过');
+    console.log(config);  
   
   return config;   
     
@@ -125,11 +129,7 @@ axios.interceptors.request.use(function (config) {    // 这里的config包含�
 
 //拦截器
 axios.interceptors.response.use(
-  response => {   
-    if(!response.data['code']){
-        response.data['code'] = 200;  //200正确，其余情况就对的
-      }
-        
+  response => {      
       return new Promise((resolve, reject) => {
         resolve(response);
       });   
@@ -140,18 +140,11 @@ axios.interceptors.response.use(
           case 401:
             console.log(401);
             window.location.href = '#/login'
-          default:
-            if(!error.response.data['code']){       
-              error.response.data['code'] = 500;  //500出错，其余情况就对的
-          }
-
+          default:            
           return new Promise((resolve, reject) => {
-            resolve(error.response);
-                
-          });           
-
-        }         
-      
+            resolve(error.response);                
+          });
+        }
     }
     return new Promise((resolve, reject) => {
       reject(error);            

@@ -53,23 +53,23 @@
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass};
             
-            requestLogin(loginParams).then(data => {
+            requestLogin(loginParams).then(res => {
+              var data = res.data;
               this.logining = false;
               //NProgress.done();
               console.log('data');
-              console.log(data);
-              var code = data.code;
+              console.log(data);              
               
-              if (code !== 200) {
+              if (res.status >= 400) {
                 this.$message({
                   message: data.message,
                   type: 'error'
                 });
               } else {
                 var userParams = null;  
-                requestUser(userParams).then(data=>{
-                    var code = data.code;
-                    if (code !== 200) {
+                requestUser(userParams).then(res=>{
+                    var data = res.data;
+                    if (res.status >= 400) {
                       this.$message({
                         message: data.message,
                         type: 'error'
