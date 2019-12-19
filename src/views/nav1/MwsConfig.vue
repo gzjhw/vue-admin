@@ -50,10 +50,7 @@
 
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="手机号" prop="phone">
-					<el-input v-model="editForm.phone" auto-complete="off"></el-input>
-				</el-form-item>
+			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">				
 				<el-form-item label="亚马逊卖家id">
 					<el-input v-model="editForm.seller_id" ></el-input>
 				</el-form-item>
@@ -65,8 +62,8 @@
 				</el-form-item>
 				<el-form-item label="可用别">
 					<el-radio-group v-model="editForm.isUse">
-						<el-radio class="radio" :label="1">开启</el-radio>
-						<el-radio class="radio" :label="0">关闭</el-radio>
+						<el-radio class="radio" label="1">开启</el-radio>
+						<el-radio class="radio" label="0" >关闭</el-radio>
 					</el-radio-group>
 				</el-form-item>
 				<el-form-item label="数据库模式">
@@ -191,7 +188,7 @@
 		methods: {
 			//可使用别
 			formatIsUse: function (row, column) {
-				return row.isUse == 1 ? '开启' : row.isUse == 0 ? '关闭' : '关闭';
+				return row.isUse == '1' ? '开启' : row.isUse == '0' ? '关闭' : '关闭';
 			},
 			handleCurrentChange(val) {
 				this.page = val;
@@ -217,6 +214,16 @@
 					} else {
 						this.total = data.total;
 						this.mwsconfigs = data.data;
+						this.mwsconfigs.forEach(function(e){
+							e.phone = e.user.phone;
+							if(e.isUse) {
+								e.isUse = "1";
+							}else {
+								e.isUse = "0";
+							}
+							return e;
+						});
+
 						this.listLoading = false;
 						//NProgress.done();
 					}
@@ -248,9 +255,17 @@
 				});
 			},
 			//显示编辑界面
-			handleEdit: function (index, row) {
+			handleEdit: function (index, row) {				
+				this.editForm.auth_token = row.auth_token;
+				this.editForm.isUse = row.isUse;
+				this.editForm.seller_id = row.seller_id;
+				this.editForm.marketplace = row.marketplace;	
+				this.editForm.id = row.id;
+				this.editForm.schema = row.schema;
+				this.editForm.user_id = row.user_id;				
 				this.editFormVisible = true;
-				this.editForm = Object.assign({}, row);
+				console.log(row)
+				
 			},
 			//显示新增界面
 			handleAdd: function () {
@@ -271,18 +286,25 @@
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							this.editLoading = true;
 							//NProgress.start();
-							let para = Object.assign({}, this.editForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							editUser(para).then((res) => {
+							let para = Object.assign({}, this.editForm);							
+							editMwsConfig(para).then((res) => {
 								this.editLoading = false;
 								//NProgress.done();
-								this.$message({
+								if(res.status >= 400){
+									this.$message({
+										message: data.message,
+										type: 'error'
+									});
+								} else {
+									this.$message({
 									message: '提交成功',
 									type: 'success'
 								});
 								this.$refs['editForm'].resetFields();
 								this.editFormVisible = false;
 								this.getMwsConfigs();
+								}
+								
 							});
 						});
 					}

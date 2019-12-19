@@ -53,7 +53,7 @@ export const batchRemoveMwsConfig = params => { return axios.post(`${base1}/mwsC
 	return res
 }); };
 
-export const editMwsConfig = params => { return axios.get(`${base1}/mwsConfig/index`, {params: params}, {headers: {meta:{ requiresAuth: true }} }).then(res=>{
+export const editMwsConfig = params => { return axios.post(`${base1}/mwsConfig/${params['id']}`, params, {headers: {meta:{ requiresAuth: true }} }).then(res=>{
 	return res
 }); };
 
