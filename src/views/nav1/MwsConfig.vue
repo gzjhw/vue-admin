@@ -144,8 +144,7 @@
 					]
 				},
 				//编辑界面数据
-				editForm: {
-					_method:'put',
+				editForm: {					
 					id: 0,
 					seller_id: '',
 					auth_token: '',
@@ -238,18 +237,25 @@
 					this.listLoading = true;
 					//NProgress.start();
 					let para = { 
-						id:        row.id,
-						'_method': 'delete'
+						id:        row.id,						
 					};
 					removeMwsConfig(para).then((res) => {
 						this.listLoading = false;
 						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getMwsConfigs();
+						if(res.status >= 400){
+							this.$message({
+								message: data.message,
+								type: 'error'
+							});
+						} else {
+							this.$message({
+								message: '删除成功',
+								type: 'success'
+							});
+							this.getMwsConfigs();
+						}
 					});
+					
 				}).catch(() => {
 
 				});
@@ -380,24 +386,35 @@
 			},
 			//批量删除
 			batchRemove: function () {
+				console.log(11155555);
 				var ids = this.sels.map(item => item.id).toString();
+				console.log(ids);
 				this.$confirm('确认删除选中记录吗？', '提示', {
 					type: 'warning'
 				}).then(() => {
 					this.listLoading = true;
 					//NProgress.start();
-					let para = { ids: ids, '_method': 'delete' };
-					batchRemoveUser(para).then((res) => {
+					let para = { ids: ids};
+					batchRemoveMwsConfig(para).then((res) => {						
+						console.log(res);
 						this.listLoading = false;
 						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getMwsConfigs();
+						if(res.status >= 400){
+							this.$message({
+								message: data.message,
+								type: 'error'
+							});
+						} else {
+							this.$message({
+								message: '提交成功',
+								type: 'success'
+							});							
+							this.getMwsConfigs();
+						}						
+						
 					});
-				}).catch(() => {
-
+				}).catch((e) => {
+					console.log(e);
 				});
 			}
 		},

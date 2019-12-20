@@ -45,15 +45,27 @@ export const getMwsConfigListPage = params => { return axios.get(`${base1}/mwsCo
 	return res
 }); };
 
-export const removeMwsConfig = params => { return axios.post(`${base1}/mwsConfig/${params.id}`, params,  {headers: {meta:{ requiresAuth: true }} } ).then(res=>{
+
+
+export const batchRemoveMwsConfig = params => { 
+	params['_method'] = 'delete';
+	return axios.post(`${base1}/mwsConfig`, params, {headers: {meta:{ requiresAuth: true }} 
+}).then(res=>{
 	return res
 }); };
 
-export const batchRemoveMwsConfig = params => { return axios.post(`${base1}/mwsConfig`, params, {headers: {meta:{ requiresAuth: true }} }).then(res=>{
+export const editMwsConfig = params => { 
+	params['_method'] = 'put';
+	return axios.post(`${base1}/mwsConfig/${params['id']}`, params, {headers: {meta:{ requiresAuth: true }} 
+}).then(res=>{
 	return res
 }); };
 
-export const editMwsConfig = params => { return axios.post(`${base1}/mwsConfig/${params['id']}`, params, {headers: {meta:{ requiresAuth: true }} }).then(res=>{
+
+export const removeMwsConfig = params => { 
+	params['_method'] = 'delete';
+	return axios.post(`${base1}/mwsConfig/${params['id']}`, params, {headers: {meta:{ requiresAuth: true }} 
+}).then(res=>{
 	return res
 }); };
 
