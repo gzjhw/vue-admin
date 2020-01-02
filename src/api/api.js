@@ -74,6 +74,8 @@ export const addMwsConfig = params => { return axios.post(`${base1}/mwsConfig`, 
 	return res
 }); };
 
+
+
 //亚马逊时库映射
 export const getAmzProductMapsListPage = params => { return axios.get(`${base1}/amzProductMap`, {params: params, headers: {meta:{ requiresAuth: true }} } ).then(res=>{
 	return res
@@ -104,6 +106,10 @@ export const removeAmzProductMaps = params => {
 }); };
 
 export const addAmzProductMaps = params => { return axios.post(`${base1}/amzProductMap`, params,  {headers: {meta: { requiresAuth: true }}} ).then(res=>{	
+	return res
+}); };
+
+export const importAmzProductMaps = params => { return axios.post(`${base1}/amzProductMap/import`, params,  {headers: {meta: { requiresAuth: true }, 'Content-Type': 'multipart/form-data' }} ).then(res=>{	
 	return res
 }); };
 

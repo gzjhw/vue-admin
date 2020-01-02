@@ -15,9 +15,10 @@
 				<el-form-item>
 					<el-upload
                 		class="upload"
-                		:action="url"
-                		:show-file-list="false"
-                		:on-success="handleImportSuccess"
+                		action="#"
+                		accept=".csv"
+                		:http-request="uploadFile"
+                		:show-file-list="false"                		
                 		:before-upload="beforeImportUpload">
                 		<el-button type="primary"  icon="el-icon-upload2" circle>点击上传</el-button>
             		</el-upload>
@@ -154,19 +155,14 @@
 </style>
 
 <script>
-	let base = '';
-
-	let base1 = '/api/v1';
-
 
 	import util from '../../common/js/util'
 	//import NProgress from 'nprogress'
-	import { getAmzProductMapsListPage, removeAmzProductMaps, batchRemoveAmzProductMaps, editAmzProductMaps, addAmzProductMaps } from '../../api/api';
+	import { getAmzProductMapsListPage, removeAmzProductMaps, batchRemoveAmzProductMaps, editAmzProductMaps, addAmzProductMaps, importAmzProductMaps } from '../../api/api';
 
 	export default {
 		data() {
-			return {
-				url: `${base1}/amzProductMap/import`,
+			return {				
 				filters: {
 					seller_skus: ''
 				},
@@ -453,45 +449,8 @@
 				});
 			},
 
-			//上传成功
-        handleImportSuccess(res, file) {
-            console.log(res);
-            if(res.code == 0){
-                if(res.errorData && res.errorData.length > 0){
-                    var msg = '<h5>错误：</h5>';
-                    console.log(res.errorData);
-                    if(this.isArrayFn(res.errorData)){
-                        for(var i = 0 ; i < res.errorData.length; i++){
-                            msg = msg + '<p>' + res.errorData[i] + '</p>';
-                        }
-                    }else {
-                        msg = msg+ '<p>' + res.msg + '</p>';
-                    }
-                    this.$message.error({
-                        dangerouslyUseHTMLString: true,
-                        showClose:true,
-                        message: msg,
-                    });
-                }else {
-                    this.$message({
-                        message: res.msg,
-                        type: 'error'
-                    });
-                }
-            }else {
-                var msg = '文件上传成功';
-                if(this.local == 'en'){
-                    msg = 'Successful file upload';
-                }
-                    this.$message({
-                        message: msg,
-                        type: 'success'
-                    });
-            }
-        },
-        beforeImportUpload(file) {
-            console.log(file.type)
-            const isExcel = (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.type === 'application/vnd.ms-excel');
+		        
+        beforeImportUpload(file) {            
             const isLt2M = file.size / 1024 / 1024 < 2;
             var msg =[
                 '上传文件只能是excel格式!',
@@ -504,17 +463,40 @@
                     'Upload file size should not exceed 2MB!'
                 ];
             }
-
-            if (!isExcel) {
-                this.$message.error(msg[0]);
-            }
+            
             if (!isLt2M) {
                 this.$message.error(msg[1]);
             }
-            return isLt2M && isLt2M;
+            
+
+            return isLt2M;
         },
 
-        downloadFlow(){
+        uploadFile(params) {        	
+            var formData = new FormData();
+	        formData.append('file', params['file']);	         	
+        	importAmzProductMaps(formData).then(res=>{        		
+				var data = res.data;
+				this.listLoading = false;
+				//NProgress.done();
+				if(res.status >= 400){
+					this.$message({
+						message: data.message,
+						type: 'error'
+					});
+				} else {
+					this.$message({
+						message: '提交成功',
+						type: 'success'
+					});							
+					this.getAmzProductMaps();
+				}
+
+        	});
+
+        }
+
+       /* downloadFlow(){
             window.axios(
                 {
                     method: 'post',
@@ -539,7 +521,7 @@
             }).catch(function (error) {
                 alert('Error! Could not reach the API. ' + error)
             });
-        }
+        }*/
 
 	},
 		mounted() {
