@@ -295,6 +295,7 @@
 							let para = Object.assign({}, this.editForm);							
 							editMwsConfig(para).then((res) => {
 								this.editLoading = false;
+								var data = res.data;
 								//NProgress.done();
 								if(res.status >= 400){
 									this.$message({
@@ -398,6 +399,7 @@
 					batchRemoveMwsConfig(para).then((res) => {						
 						console.log(res);
 						this.listLoading = false;
+						var data = res.data;
 						//NProgress.done();
 						if(res.status >= 400){
 							this.$message({

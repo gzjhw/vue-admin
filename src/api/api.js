@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { _local   } from '../storage/storage';
 
-let base = '';
-
-let base1 = '/api/v1';
-
 
 let ttl = 59;
 
 let JWT_REFRESH_TTL = 20150;  //可以允许刷新时间
+
+let base = '';
+
+let base1 = '/api/v1';
+
 
 
 /*export const requestLogin = params => { return axios.post(`${base}/login`, params).then(res => {
@@ -69,12 +70,42 @@ export const removeMwsConfig = params => {
 	return res
 }); };
 
-export const addMwsConfig = params => { return axios.post(`${base1}/mwsConfig`, params,  {headers: {meta: { requiresAuth: true }}} ).then(res=>{
-	console.log(123456);
-	console.log(res);
+export const addMwsConfig = params => { return axios.post(`${base1}/mwsConfig`, params,  {headers: {meta: { requiresAuth: true }}} ).then(res=>{	
 	return res
 }); };
 
+//亚马逊时库映射
+export const getAmzProductMapsListPage = params => { return axios.get(`${base1}/amzProductMap`, {params: params, headers: {meta:{ requiresAuth: true }} } ).then(res=>{
+	return res
+}); };
+
+
+
+export const batchRemoveAmzProductMaps = params => { 
+	params['_method'] = 'delete';
+	return axios.post(`${base1}/amzProductMap`, params, {headers: {meta:{ requiresAuth: true }} 
+}).then(res=>{
+	return res
+}); };
+
+export const editAmzProductMaps = params => { 
+	params['_method'] = 'put';
+	return axios.post(`${base1}/amzProductMap/${params['id']}`, params, {headers: {meta:{ requiresAuth: true }} 
+}).then(res=>{
+	return res
+}); };
+
+
+export const removeAmzProductMaps = params => { 
+	params['_method'] = 'delete';
+	return axios.post(`${base1}/amzProductMap/${params['id']}`, params, {headers: {meta:{ requiresAuth: true }} 
+}).then(res=>{
+	return res
+}); };
+
+export const addAmzProductMaps = params => { return axios.post(`${base1}/amzProductMap`, params,  {headers: {meta: { requiresAuth: true }}} ).then(res=>{	
+	return res
+}); };
 
 
 export const requestUser = params => { return axios.get(`${base1}/user`,  {params: params, headers: {meta: { requiresAuth: true }} }).then(res=>{
@@ -99,3 +130,8 @@ export const requestVerifycode = params => { return axios.post(`${base1}/captcha
 export const requestRegister = params => { return axios.post(`${base1}/users`, params).then(res => {	
 	return res 
 }); };
+
+//sku 转化
+
+
+

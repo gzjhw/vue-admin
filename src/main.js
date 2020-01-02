@@ -23,6 +23,9 @@ let ttl = 59;
 
 let JWT_REFRESH_TTL = 20150;  //可以允许刷新时间
 
+let base = '';
+
+let base1 = '/api/v1';
 
 
 

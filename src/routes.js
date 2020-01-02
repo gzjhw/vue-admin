@@ -11,6 +11,7 @@ import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 import MwsConfig from './views/nav1/MwsConfig.vue'
+import AmzProductMap from './views/nav2/AmzProductMap.vue'
 
 let routes = [
     {
@@ -66,6 +67,7 @@ let routes = [
         name: '导航二',
         iconCls: 'fa fa-id-card-o',
         children: [
+            { path: '/amzProductMap', component: AmzProductMap, name: '亚马逊Sku映射维护', meta: { requiresAuth: true } },
             { path: '/page4', component: Page4, name: '页面4',  meta: { requiresAuth: true } },
             { path: '/page5', component: Page5, name: '页面5', meta: { requiresAuth: true } }
         ],
