@@ -4,7 +4,7 @@
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
-					<el-input v-model="filters.seller_skus" placeholder="SellerSku"></el-input>
+					<el-input v-model="filters.sku" placeholder="Sku"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" v-on:click="getAmzProductMaps">查询</el-button>
@@ -164,7 +164,7 @@
 		data() {
 			return {				
 				filters: {
-					seller_skus: ''
+					sku: ''
 				},
 				amzProductMaps: [],
 				total: 0,
@@ -240,7 +240,7 @@
 			getAmzProductMaps() {
 				let para = {
 					page: this.page,
-					phone: this.filters.phone,
+					sku: this.filters.sku,
 					pageSize: this.pageSize
 				};
 				console.log(para);
