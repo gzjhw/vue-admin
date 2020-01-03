@@ -302,8 +302,8 @@
 				this.editForm.model = row.model;
 				this.editForm.color = row.color;
 				this.editForm.size = row.size;	
-				this.editForm.id = row.id;
-				this.editForm.seller_sku = row.seller_sku;				
+				this.editForm.id = row.id;				
+				this.editForm.seller_skus = row.seller_skus.slice(1,-1);				
 				this.editFormVisible = true;				
 				
 			},
